@@ -36,11 +36,18 @@ public class Vehicle {
 		
 		i+=1;
 		c = S.charAt(i);
-		while (c!=' '){
-			this.ordinate = 10*this.ordinate + (int) c ;
+		while (i<=S.length() && S.charAt(i)!=' '){
+			this.ordinate = 10*this.ordinate + (int) S.charAt(i) ;
 			i+=1;
-			c = S.charAt(i);
 		}
+	}
+	
+	Vehicle(int name, String orientation, int length, int absissa, int ordinate) {
+		this.name = name;
+		this.orientation = orientation.charAt(0);
+		this.length = length;
+		this.absissa = absissa;
+		this.ordinate = ordinate;
 	}
 	
 	public char getOrientation() {
