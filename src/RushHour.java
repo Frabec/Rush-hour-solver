@@ -2,6 +2,7 @@
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.LinkedList;
 import java.util.Scanner;
 
 public class RushHour {
@@ -41,6 +42,45 @@ public class RushHour {
 			}
 		}
 		return tableau;
+	}
+	
+	
+/// Find all the neighbors from a given state in a complexity O(numbervehicles*gamesize). They are all store in a LinkedList.
+	public LinkedList<RushHour> AllPossibleMoves(RushHour R) throws SuperpositionError {
+		LinkedList<RushHour> L = new LinkedList<RushHour>();
+		int[][] tableau = R.display();
+		for (Vehicle v:R.vehicules) {
+			if (v.getOrientation()=='h') {
+				int i = - 1;
+				while (tableau[v.getOrdinate()-1][v.getAbsissa()-1 + i]==0) {
+					v.move(i);
+					L.add(R);
+					v.move(-i);
+				}
+				i=1;
+				while (tableau[v.getOrdinate()-1][v.getAbsissa()-1 + v.getLength() + i]==0) {
+					v.move(i);
+					L.add(R);
+					v.move(-i);
+				}
+			}
+			else {
+				int i = - 1;
+				while (tableau[v.getOrdinate()-1 + i][v.getAbsissa()-1]==0) {
+					v.move(i);
+					L.add(R);
+					v.move(-i);
+				}
+				i=1;
+				while (tableau[v.getOrdinate()-1 + v.getLength() + i][v.getAbsissa()-1]==0) {
+					v.move(i);
+					L.add(R);
+					v.move(-i);
+				}
+			}
+		}
+		
+		return L;
 	}
 
 }
