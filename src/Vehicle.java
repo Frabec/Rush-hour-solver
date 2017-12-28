@@ -66,6 +66,15 @@ public class Vehicle {
 		return this.ordinate;
 	}
 	
+	@Override
+	public boolean equals(Object o) {
+		Vehicle that = (Vehicle) o;
+		if(this.absissa==that.absissa && this.ordinate==that.ordinate && this.length==that.length && this.orientation==that.orientation) {
+			return true;
+		}
+		else return false;
+	}
+	
 ///// The next method moves the car without checking if the move is allowed ////
 	public void move(int n) {
 		if (this.orientation=='h') {
