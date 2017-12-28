@@ -65,4 +65,14 @@ public class Vehicle {
 	public int getOrdinate() {
 		return this.ordinate;
 	}
+	
+///// The next method moves the car without checking if the move is allowed ////
+	public void move(int n) {
+		if (this.orientation=='h') {
+			this.absissa = this.absissa + n;  // n=1 the car is going one case right
+		}
+		else {
+			this.ordinate = this.ordinate + n;  // n=1 the car is going one case down
+		}
+	}
 }
