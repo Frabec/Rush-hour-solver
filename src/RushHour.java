@@ -10,11 +10,11 @@ import java.util.Scanner;
 
 public class RushHour {
 
-	//////////// Constructor ///////////////////
+	//////////// Constructors ///////////////////
 
 	int size;
 	Vehicle[] vehicules;
-	int [][]grid;
+	int[][] grid;
 
 	RushHour(String fileName) throws FileNotFoundException, SuperpositionError {
 		File fichier = new File(fileName);
@@ -26,7 +26,7 @@ public class RushHour {
 					lecteur.nextInt());
 		}
 		lecteur.close();
-		
+
 		int[][] tableau = new int[this.size][this.size];
 		for (Vehicle v : this.vehicules) {
 			if (v.getOrientation() == 'h') {
@@ -43,18 +43,41 @@ public class RushHour {
 				}
 			}
 		}
-		this.grid=tableau;
+		this.grid = tableau;
 	}
-	
-	///Method used to display the grid.
+
+	RushHour(int size, Vehicle[] vehicules) throws SuperpositionError  {
+		this.size = size;
+		this.vehicules = vehicules;
+		int[][] tableau = new int[this.size][this.size];
+		for (Vehicle v : this.vehicules) {
+			if (v.getOrientation() == 'h') {
+				for (int i = 0; i < v.getLength(); i++) {
+					if (tableau[v.getOrdinate() - 1][v.getAbsissa() + i - 1] != 0)
+						throw new SuperpositionError();
+					tableau[v.getOrdinate() - 1][v.getAbsissa() + i - 1] = v.name;
+				}
+			} else {
+				for (int i = 0; i < v.getLength(); i++) {
+					if (tableau[v.getOrdinate() + i - 1][v.getAbsissa() - 1] != 0)
+						throw new SuperpositionError();
+					tableau[v.getOrdinate() + i - 1][v.getAbsissa() - 1] = v.name;
+				}
+			}
+		}
+		this.grid = tableau;
+
+	}
+
+	/// Method used to display the grid.
 	public void show() throws SuperpositionError {
-		for (int i =0; i<this.grid.length; i++){
-		 	for (int j=0 ; j<this.grid.length; j++){
-		 		System.out.print(this.grid[i][j] +" ");
-		 	}
-		 	System.out.println("");
-		 }
-	System.out.println("");
+		for (int i = 0; i < this.grid.length; i++) {
+			for (int j = 0; j < this.grid.length; j++) {
+				System.out.print(this.grid[i][j] + " ");
+			}
+			System.out.println("");
+		}
+		System.out.println("");
 	}
 
 	/// Find all the neighbors from a given state in a complexity
