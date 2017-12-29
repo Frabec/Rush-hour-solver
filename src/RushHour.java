@@ -105,7 +105,7 @@ public class RushHour {
 		int i = this.vehicules[0].getOrdinate() - 1; // Assuming the first car
 														// is the red one that
 														// needs to "escape"
-		int j = this.vehicules[0].getAbsissa() - 1 + this.vehicules[0].getLength() - 1;
+		int j = this.vehicules[0].getAbsissa() - 1 + this.vehicules[0].getLength();
 		while (j < this.grid[0].length) {
 			if (this.grid[i][j] != 0) {
 				return false; // The current state is a solution if the way to
