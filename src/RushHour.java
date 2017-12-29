@@ -82,39 +82,40 @@ public class RushHour {
 
 	/// Find all the neighbors from a given state in a complexity
 	/// O(numbervehicles*gamesize). They are all stored in a LinkedList.
-	public static LinkedList<RushHour> AllPossibleMoves(RushHour R) throws SuperpositionError {
+	public LinkedList<RushHour> AllPossibleMoves() throws SuperpositionError {
 		LinkedList<RushHour> L = new LinkedList<RushHour>();
-		for (Vehicle v : R.vehicules) {
-			if (v.getOrientation() == 'h') {
+		Vehicle [] newConfiguration=this.vehicules.clone();
+		for (int j=0; j<this.vehicules.length;j++) {
+			if (this.vehicules[j].getOrientation() == 'h') {
 				int i = -1;
-				while (v.getAbsissa() - 1 + i >= 0 && R.grid[v.getOrdinate() - 1][v.getAbsissa() - 1 + i] == 0) {
-					v.move(i);
-					L.add(R);
-					v.move(-i);
+				while (this.vehicules[j].getAbsissa() - 1 + i >= 0 && this.grid[this.vehicules[j].getOrdinate() - 1][this.vehicules[j].getAbsissa() - 1 + i] == 0) {
+					newConfiguration[j].move(i);
+					L.add(new RushHour(size, newConfiguration));
+					newConfiguration[j].move(-i);
 					i--;
 				}
 				i = 1;
-				while (v.getAbsissa() - 1 + v.getLength() - 1 + i < R.size
-						&& R.grid[v.getOrdinate() - 1][v.getAbsissa() - 1 + v.getLength() - 1 + i] == 0) {
-					v.move(i);
-					L.add(R);
-					v.move(-i);
+				while (this.vehicules[j].getAbsissa() - 1 + this.vehicules[j].getLength() - 1 + i < this.size
+						&& this.grid[this.vehicules[j].getOrdinate() - 1][this.vehicules[j].getAbsissa() - 1 + this.vehicules[j].getLength() - 1 + i] == 0) {
+					newConfiguration[j].move(i);
+					L.add(new RushHour(size, newConfiguration));
+					newConfiguration[j].move(-i);
 					i++;
 				}
 			} else {
 				int i = -1;
-				while (v.getOrdinate() - 1 + i >= 0 && R.grid[v.getOrdinate() - 1 + i][v.getAbsissa() - 1] == 0) {
-					v.move(i);
-					L.add(R);
-					v.move(-i);
+				while (this.vehicules[j].getOrdinate() - 1 + i >= 0 && this.grid[this.vehicules[j].getOrdinate() - 1 + i][this.vehicules[j].getAbsissa() - 1] == 0) {
+					newConfiguration[j].move(i);
+					L.add(new RushHour(size, newConfiguration));
+					newConfiguration[j].move(-i);
 					i--;
 				}
 				i = 1;
-				while (v.getOrdinate() - 1 + v.getLength() - 1 + i < R.size
-						&& R.grid[v.getOrdinate() - 1 + v.getLength() - 1 + i][v.getAbsissa() - 1] == 0) {
-					v.move(i);
-					L.add(R);
-					v.move(-i);
+				while (this.vehicules[j].getOrdinate() - 1 + this.vehicules[j].getLength() - 1 + i < this.size
+						&& this.grid[this.vehicules[j].getOrdinate() - 1 + this.vehicules[j].getLength() - 1 + i][this.vehicules[j].getAbsissa() - 1] == 0) {
+					newConfiguration[j].move(i);
+					L.add(new RushHour(size, newConfiguration));
+					newConfiguration[j].move(-i);
 					i++;
 				}
 			}
@@ -159,7 +160,7 @@ public class RushHour {
 			RushHour current = Q.poll();
 			if (current.isSolution())
 				return (Visited.get(current));
-			for (RushHour r : AllPossibleMoves(current)) {
+			for (RushHour r : current.AllPossibleMoves()) {
 				if (!Visited.containsKey(r)) {
 					Q.add(r);
 					Visited.put(r, Visited.get(current) + 1);
