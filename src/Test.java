@@ -12,4 +12,11 @@ public class Test {
 		System.out.println("R est résolu : " + R.isSolution());
 		System.out.println(RushHour.BFS(R));
 	}
+	
+	public static void printConfig(Vehicle [] vehicules){
+		for (int i=0; i<vehicules.length;i++){
+			System.out.println(vehicules [i]);
+		}
+		System.out.println("");
+	}
 }

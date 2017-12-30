@@ -12,9 +12,9 @@ public class RushHour {
 
 	//////////// Constructors ///////////////////
 
-	int size;
-	Vehicle[] vehicules;
-	int[][] grid;
+	final int size;
+	final Vehicle[] vehicules;
+	final int  [][] grid;
 
 	RushHour(String fileName) throws FileNotFoundException, SuperpositionError {
 		File fichier = new File(fileName);
@@ -84,11 +84,7 @@ public class RushHour {
 	/// O(numbervehicles*gamesize). They are all stored in a LinkedList.
 	public LinkedList<RushHour> AllPossibleMoves() throws SuperpositionError {
 		LinkedList<RushHour> L = new LinkedList<RushHour>();
-		Vehicle [] newConfiguration= new Vehicle[this.vehicules.length];
-		//copy the array to avoid side effect
-		for (int i=0; i<this.vehicules.length;i++){
-			newConfiguration[i]=new Vehicle(this.vehicules[i].name,this.vehicules[i].getOrientation()+"",this.vehicules[i].getLength(),this.vehicules[i].getAbsissa(), this.vehicules[i].getOrdinate());
-		}
+		Vehicle [] newConfiguration= this.vehicules.clone();
 		for (int j=0; j<this.vehicules.length;j++) {
 			if (this.vehicules[j].getOrientation() == 'h') {
 				int i = -1;
@@ -100,7 +96,7 @@ public class RushHour {
 				}
 				i = 1;
 				while (this.vehicules[j].getAbsissa() - 1 + this.vehicules[j].getLength() - 1 + i < this.size
-						&& this.grid[this.vehicules[j].getOrdinate() - 1][this.vehicules[j].getAbsissa() - 1 + this.vehicules[j].getLength() - 1 + i] == 0) {
+						&& this.grid[this.vehicules[j].getOrdinate() - 1][this.vehicules[j].getAbsissa() - 1 + this.vehicules[j].getLength()-1+ i] == 0) {
 					newConfiguration[j].move(i);
 					L.add(new RushHour(size, newConfiguration));
 					newConfiguration[j].move(-i);
@@ -109,13 +105,9 @@ public class RushHour {
 			} else {
 				int i = -1;
 				while (this.vehicules[j].getOrdinate() - 1 + i >= 0 && this.grid[this.vehicules[j].getOrdinate() - 1 + i][this.vehicules[j].getAbsissa() - 1] == 0) {
-					this.show();
-					System.out.println(this.vehicules[j].getOrdinate());
 					newConfiguration[j].move(i);
-					System.out.println(this.vehicules[j].getOrdinate());
 					L.add(new RushHour(size, newConfiguration));
 					newConfiguration[j].move(-i);
-					System.out.println(this.vehicules[j].getOrdinate());
 					i--;
 				}
 				i = 1;

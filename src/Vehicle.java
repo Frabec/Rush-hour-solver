@@ -75,6 +75,12 @@ public class Vehicle {
 		} else
 			return false;
 	}
+	
+	public String toString (){
+		String s;
+		s=this.name+ " " + this.orientation +" "+ this.length+" " + this.absissa +" " + this.ordinate;
+		return (s);
+	}
 
 	///// The next method moves the car without checking if the move is allowed
 	///// ////
