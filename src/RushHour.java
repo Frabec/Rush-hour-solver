@@ -14,7 +14,7 @@ public class RushHour {
 
 	final int size;
 	final Vehicle[] vehicules;
-	final int  [][] grid;
+	final int[][] grid;
 
 	RushHour(String fileName) throws FileNotFoundException, SuperpositionError {
 		File fichier = new File(fileName);
@@ -46,7 +46,7 @@ public class RushHour {
 		this.grid = tableau;
 	}
 
-	RushHour(int size, Vehicle[] vehicules) throws SuperpositionError  {
+	RushHour(int size, Vehicle[] vehicules) throws SuperpositionError {
 		this.size = size;
 		this.vehicules = vehicules;
 		int[][] tableau = new int[this.size][this.size];
@@ -69,6 +69,48 @@ public class RushHour {
 
 	}
 
+	// Constructor used to move vehicle, returns a new object where vehicle j is
+	// move of i cases.
+	public RushHour(RushHour R, int j, int i) throws SuperpositionError {
+		Vehicle vehicules[] = new Vehicle[R.vehicules.length];
+		this.size = R.size;
+		for (int l = 0; l < R.vehicules.length; l++) {
+			if (l == j) {
+				if (R.vehicules[l].getOrientation() == 'h') {
+					vehicules[l] = new Vehicle(R.vehicules[l].name, R.vehicules[l].getOrientation() + "",
+							R.vehicules[l].getLength(), R.vehicules[l].getAbsissa() + i, R.vehicules[l].getOrdinate());
+				} else {
+					vehicules[l] = new Vehicle(R.vehicules[l].name, R.vehicules[l].getOrientation() + "",
+							R.vehicules[l].getLength(), R.vehicules[l].getAbsissa(), R.vehicules[l].getOrdinate() + i);
+				}
+			}
+			else {
+				vehicules[l]=R.vehicules[l];
+			}
+		}
+		this.vehicules=vehicules;
+		int[][] tableau = new int[this.size][this.size];
+		for (Vehicle v : this.vehicules) {
+			if (v.getOrientation() == 'h') {
+				for (int l= 0; l< v.getLength(); l++) {
+					if (tableau[v.getOrdinate() - 1][v.getAbsissa() + l- 1] != 0)
+						throw new SuperpositionError();
+					tableau[v.getOrdinate() - 1][v.getAbsissa() + l- 1] = v.name;
+				}
+			} else {
+				for (int l= 0; l< v.getLength(); l++) {
+					if (tableau[v.getOrdinate() + l- 1][v.getAbsissa() - 1] != 0)
+						throw new SuperpositionError();
+					tableau[v.getOrdinate() + l- 1][v.getAbsissa() - 1] = v.name;
+				}
+			}
+		}
+		this.grid = tableau;
+
+	}
+		
+	
+
 	/// Method used to display the grid.
 	public void show() throws SuperpositionError {
 		for (int i = 0; i < this.grid.length; i++) {
@@ -82,40 +124,37 @@ public class RushHour {
 
 	/// Find all the neighbors from a given state in a complexity
 	/// O(numbervehicles*gamesize). They are all stored in a LinkedList.
-	public LinkedList<RushHour> AllPossibleMoves() throws SuperpositionError {
+	public static LinkedList<RushHour> AllPossibleMoves(RushHour R) throws SuperpositionError {
 		LinkedList<RushHour> L = new LinkedList<RushHour>();
-		Vehicle [] newConfiguration= this.vehicules.clone();
-		for (int j=0; j<this.vehicules.length;j++) {
-			if (this.vehicules[j].getOrientation() == 'h') {
+		for (int j = 0; j < R.vehicules.length; j++) {
+			if (R.vehicules[j].getOrientation() == 'h') {
 				int i = -1;
-				while (this.vehicules[j].getAbsissa() - 1 + i >= 0 && this.grid[this.vehicules[j].getOrdinate() - 1][this.vehicules[j].getAbsissa() - 1 + i] == 0) {
-					newConfiguration[j].move(i);
-					L.add(new RushHour(size, newConfiguration));
-					newConfiguration[j].move(-i);
+				while (R.vehicules[j].getAbsissa() - 1 + i >= 0
+						&& R.grid[R.vehicules[j].getOrdinate() - 1][R.vehicules[j].getAbsissa() - 1 + i] == 0) {
+					
+					L.add(new RushHour(R, j, i));
 					i--;
 				}
 				i = 1;
-				while (this.vehicules[j].getAbsissa() - 1 + this.vehicules[j].getLength() - 1 + i < this.size
-						&& this.grid[this.vehicules[j].getOrdinate() - 1][this.vehicules[j].getAbsissa() - 1 + this.vehicules[j].getLength()-1+ i] == 0) {
-					newConfiguration[j].move(i);
-					L.add(new RushHour(size, newConfiguration));
-					newConfiguration[j].move(-i);
+				while (R.vehicules[j].getAbsissa() - 1 + R.vehicules[j].getLength() - 1 + i < R.size
+						&& R.grid[R.vehicules[j].getOrdinate() - 1][R.vehicules[j].getAbsissa() - 1
+								+ R.vehicules[j].getLength() - 1 + i] == 0) {
+					
+					L.add(new RushHour(R,j,i));
 					i++;
 				}
 			} else {
 				int i = -1;
-				while (this.vehicules[j].getOrdinate() - 1 + i >= 0 && this.grid[this.vehicules[j].getOrdinate() - 1 + i][this.vehicules[j].getAbsissa() - 1] == 0) {
-					newConfiguration[j].move(i);
-					L.add(new RushHour(size, newConfiguration));
-					newConfiguration[j].move(-i);
+				while (R.vehicules[j].getOrdinate() - 1 + i >= 0
+						&& R.grid[R.vehicules[j].getOrdinate() - 1 + i][R.vehicules[j].getAbsissa() - 1] == 0) {
+					L.add(new RushHour(R,j,i));
 					i--;
 				}
 				i = 1;
-				while (this.vehicules[j].getOrdinate() - 1 + this.vehicules[j].getLength() - 1 + i < this.size
-						&& this.grid[this.vehicules[j].getOrdinate() - 1 + this.vehicules[j].getLength() - 1 + i][this.vehicules[j].getAbsissa() - 1] == 0) {
-					newConfiguration[j].move(i);
-					L.add(new RushHour(size, newConfiguration));
-					newConfiguration[j].move(-i);
+				while (R.vehicules[j].getOrdinate() - 1 + R.vehicules[j].getLength() - 1 + i < R.size
+						&& R.grid[R.vehicules[j].getOrdinate() - 1 + R.vehicules[j].getLength() - 1 + i][R.vehicules[j]
+								.getAbsissa() - 1] == 0) {
+					L.add(new RushHour(R,j,i));
 					i++;
 				}
 			}
@@ -160,7 +199,7 @@ public class RushHour {
 			RushHour current = Q.poll();
 			if (current.isSolution())
 				return (Visited.get(current));
-			for (RushHour r : current.AllPossibleMoves()) {
+			for (RushHour r : AllPossibleMoves(R)) {
 				if (!Visited.containsKey(r)) {
 					Q.add(r);
 					Visited.put(r, Visited.get(current) + 1);
