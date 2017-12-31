@@ -197,14 +197,21 @@ public class RushHour {
 
 		while (!Q.isEmpty()) {
 			RushHour current = Q.poll();
-			if (current.isSolution())
+			//System.out.println("La configuration ");
+			//current.show();
+			if (current.isSolution()){
 				return (Visited.get(current));
-			for (RushHour r : AllPossibleMoves(R)) {
+			}
+			//System.out.println("Ses voisins : ");
+			LinkedList<RushHour> toMove = AllPossibleMoves(current);
+			for (RushHour r : toMove) {
+				//r.show();
 				if (!Visited.containsKey(r)) {
 					Q.add(r);
 					Visited.put(r, Visited.get(current) + 1);
 				}
 			}
+			//System.out.println("--------------------------------------");
 		}
 		return 0; // Means that there are no solution
 	}
