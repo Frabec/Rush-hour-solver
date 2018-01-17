@@ -216,7 +216,7 @@ public class RushHour {
 		return 0; // Means that there are no solution
 	}
 
-	public int hashcode() {
+	public int hashCode() {
 		int h = 0;
 		for (Vehicle v : this.vehicules) {
 			h += v.getAbsissa() * 12 + v.getOrdinate() * 17;
