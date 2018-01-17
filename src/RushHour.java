@@ -194,12 +194,14 @@ public class RushHour {
 														// be visit
 		Visited.put(R, 0);
 		Q.add(R);
-
+		double time1=System.currentTimeMillis();
 		while (!Q.isEmpty()) {
 			RushHour current = Q.poll();
 			//System.out.println("La configuration ");
 			//current.show();
 			if (current.isSolution()){
+				double time2=System.currentTimeMillis();
+				System.out.println(time2-time1 + " ms");
 				return (Visited.get(current));
 			}
 			//System.out.println("Ses voisins : ");
