@@ -1,10 +1,11 @@
-
 /* Class containing all the programs asked in the PI project */
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Scanner;
 
@@ -70,7 +71,7 @@ public class RushHour {
 	}
 
 	// Constructor used to move vehicle, returns a new object where vehicle j is
-	// move of i cases.
+	// moved by i cases (vers le bas si vertical, ou vers la droite si horizontal)
 	public RushHour(RushHour R, int j, int i) throws SuperpositionError {
 		Vehicle vehicules[] = new Vehicle[R.vehicules.length];
 		this.size = R.size;
@@ -197,8 +198,6 @@ public class RushHour {
 
 		while (!Q.isEmpty()) {
 			RushHour current = Q.poll();
-			//System.out.println("La configuration ");
-			//current.show();
 			if (current.isSolution()){
 				return (Visited.get(current));
 			}
@@ -211,7 +210,6 @@ public class RushHour {
 					Visited.put(r, Visited.get(current) + 1);
 				}
 			}
-			//System.out.println("--------------------------------------");
 		}
 		return 0; // Means that there are no solution
 	}
@@ -219,7 +217,7 @@ public class RushHour {
 	public int hashCode() {
 		int h = 0;
 		for (Vehicle v : this.vehicules) {
-			h += v.getAbsissa() * 12 + v.getOrdinate() * 17;
+			h += v.getAbsissa() * 12 + v.getOrdinate()^2 * 173;
 		}
 		return h;
 	}
@@ -235,6 +233,63 @@ public class RushHour {
 			}
 		}
 		return true;
+	}
+	
+/////// Approach based on heuristics //////////
+	
+	public static int h(RushHour R) {
+		int h = 0;
+		
+		int i = R.vehicules[0].getOrdinate() - 1;
+		for (int j = R.vehicules[0].getAbsissa() - 1 + R.vehicules[0].getLength(); j<R.size;j++){
+			if (R.grid[i][j] != 0) {
+				h++;  // Pas besoin de vérifier si on n'a pas déjà comptabilisé la voiture, puisqu'elles sont
+					  //  forcément verticales
+			}
+		}
+		
+		return h;
+	}
+	
+	public static int Heuristics(RushHour R) throws SuperpositionError {
+
+		/* Initialization as learned in INF411 */
+		HashMap<RushHour, Integer> Visited = new HashMap<RushHour, Integer>(); // Visit
+																				// each
+																				// possibility
+																				// only
+																				// once
+		
+		Comparator<RushHour> Comp = new Comparator<RushHour>(){
+			public int compare(RushHour R, RushHour S) {
+				if (R.equals(S)) {
+					return 0;
+				}
+				else if (RushHour.h(R) + Visited.get(R) < RushHour.h(S) + Visited.get(S)) {
+					return -1;
+				}
+				else return 1;
+			}}; 
+		PriorityQueue<RushHour> Q = new PriorityQueue<RushHour>(1, Comp); // Contains the next
+																		  // neighbors that will
+																		  // be visit sorted via h+d
+		Visited.put(R, 0);
+		Q.add(R);
+
+		while (!Q.isEmpty()) {
+			RushHour current = Q.poll();
+			if (current.isSolution()){
+				return (Visited.get(current));
+			}
+			LinkedList<RushHour> toMove = AllPossibleMoves(current);
+			for (RushHour r : toMove) {
+				if (!Visited.containsKey(r)) {
+					Visited.put(r, Visited.get(current) + 1);
+					Q.add(r);
+				}
+			}
+		}
+		return 0; // Means that there are no solution
 	}
 
 }
