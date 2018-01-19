@@ -184,36 +184,40 @@ public class RushHour {
 	public static int BFS(RushHour R) throws SuperpositionError {
 
 		/* Initialization as learned in INF411 */
-		HashMap<RushHour, Integer> Visited = new HashMap<RushHour, Integer>(); // Visit
-																				// each
-																				// possibility
-																				// only
-																				// once
+		HashMap<RushHour, Integer> Visited = new HashMap<RushHour, Integer>(); // Visit each possibility once 
+		HashMap<RushHour,RushHour> path = new HashMap<RushHour, RushHour>();	// Store the path, the value is the predecessor of the key															// each
+																				
 		Queue<RushHour> Q = new LinkedList<RushHour>(); // Contains the next
 														// neighbors that will
-														// be visit
+														// be visited
 		Visited.put(R, 0);
+		path.put(R,null);
 		Q.add(R);
 		double time1=System.currentTimeMillis();
 		while (!Q.isEmpty()) {
 			RushHour current = Q.poll();
-			//System.out.println("La configuration ");
-			//current.show();
 			if (current.isSolution()){
 				double time2=System.currentTimeMillis();
-				System.out.println(time2-time1 + " ms");
+				System.out.println("Execution time = "+ (time2-time1) + " ms");
+				RushHour c=current;
+				LinkedList <RushHour> solution = new LinkedList<RushHour>();
+				while (c!=null){ //we revert the path who goes from solution to start
+					solution.addFirst(c);
+					c=path.get(c);
+				}
+				for (RushHour a: solution){
+					a.show();
+				}
 				return (Visited.get(current));
 			}
-			//System.out.println("Ses voisins : ");
 			LinkedList<RushHour> toMove = AllPossibleMoves(current);
 			for (RushHour r : toMove) {
-				//r.show();
 				if (!Visited.containsKey(r)) {
 					Q.add(r);
 					Visited.put(r, Visited.get(current) + 1);
+					path.put(r, current);
 				}
 			}
-			//System.out.println("--------------------------------------");
 		}
 		return 0; // Means that there are no solution
 	}
