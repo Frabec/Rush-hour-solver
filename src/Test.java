@@ -3,49 +3,38 @@ import java.io.IOException;
 public class Test {
 
 	public static void main(String[] args) throws IOException, SuperpositionError {
-<<<<<<< HEAD
-		RushHour R = new RushHour("RushHour7.txt");
-		R.show();
-		
-		//for (RushHour v : RushHour.AllPossibleMoves(R)){
-			//v.show();
-		//}
-		//System.out.println(RushHour.AllPossibleMoves(R).size());
-		//System.out.println("R est résolu : " + R.isSolution());
-		System.out.println("Number of movements " + RushHour.BFS(R));
-=======
-		RushHour R = new RushHour("RushHour5.txt");
+
+		RushHour R = new RushHour("RushHourHtest8.txt");
+		System.out.println("Start state : "+"\n");
 		R.show();
 		
 		long startTime = System.currentTimeMillis();
-		
-		System.out.println(RushHour.BFS(R));   // Return 7 for RushHour1, in 55ms, that is correct !
+		System.out.println("-------------------------------Brute-force--------------------------");
+		System.out.println("Number of moves :"+ BFS.bfs(R,true));   
 		
 		long stopTime = System.currentTimeMillis();
 		long elapsedTime = stopTime - startTime;
-		System.out.println("Temps d'exécution : " + elapsedTime + " ms");
+		System.out.println("Execution time : " + elapsedTime + " ms");
+	    System.out.println("-------------------------------Heuristic1--------------------------");
+		
 	    
-		System.out.println("h(R) = " + RushHour.h(R));
+		startTime = System.currentTimeMillis();
+		System.out.println("Number of moves :"+Heuristic1.heuristics(R,false)); 
+		System.out.println("h(R) = " + Heuristic1.h(R));
+		stopTime = System.currentTimeMillis();
+		elapsedTime = stopTime - startTime;
+		System.out.println("Execution time : " + elapsedTime + " ms");
+		System.out.println("-------------------------------Heuristic2--------------------------");
+		
 	    
 		startTime = System.currentTimeMillis();
 		
-		System.out.println(RushHour.Heuristics(R));   // Return 7 for RushHour1, in 55ms, that is correct !
-		
+		System.out.println("Number of moves :"+Heuristic2.heuristics(R,false));   
+		System.out.println("h(R) = " + Heuristic2.h(R));
 		stopTime = System.currentTimeMillis();
 		elapsedTime = stopTime - startTime;
-		System.out.println("Temps d'exécution avec heuristique : " + elapsedTime + " ms");
-		
-		System.out.println("h1(R) = " + RushHour.h1(R));
-	    
-		startTime = System.currentTimeMillis();
-		
-		System.out.println(RushHour.Heuristics1(R));   
-		
-		stopTime = System.currentTimeMillis();
-		elapsedTime = stopTime - startTime;
-		System.out.println("Temps d'exécution avec seconde heuristique : " + elapsedTime + " ms");
-	    
->>>>>>> 73cec5178424c72a76361a6052c67f4df1f8430c
+		System.out.println("Execution time : " + elapsedTime + " ms");
+		System.out.println("---------------------------------------------------------");
 	}
 	
 	public static void printConfig(Vehicle [] vehicules){
