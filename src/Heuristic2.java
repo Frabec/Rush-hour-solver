@@ -19,59 +19,71 @@ public class Heuristic2 {
 		// constraint will be considered first.
 
 		int h = 0;
-
+		int h1 = 0;
+		int h2 = 0;
 		int i = R.vehicules[0].getOrdinate() - 1;
-		int[] Check = new int[R.vehicules.length + 1];
-
+		boolean[] checkTop = new boolean[R.vehicules.length + 1];
+		boolean[] checkBottom = new boolean[R.vehicules.length + 1];
 		for (int j = R.vehicules[0].getAbsissa() - 1 + R.vehicules[0].getLength(); j < R.size; j++) {
 			int k = R.grid[i][j];
 			if (k != 0) {
 				h++; // No need to check if we already counted the car, as they
 						// are necessarily verticals
-
+				checkTop[k] = true;
+				checkBottom[k] = true;
 				// But we have to check if we don't count twice the cars that
 				// block the cars "k".
-				// That's what we do with the Check array.
+				// That's what we do with the Checks array.*
 
-				if (R.vehicules[k - 1].getLength() < i) { // If car k is not too
-															// tall to be sent
-															// up, to unblock
-															// the red one
-					int h1 = 0;
-					for (int a = 0; a < R.vehicules[k - 1].getOrdinate() - 1; a++) {
-						if (R.grid[a][j] != 0 && R.grid[a][j] != k && Check[R.grid[a][j]] == 0) {
+				// First we want to go up as many times as possible
+				if (i-R.vehicules[k-1].getLength() >=0) { // If
+																							// we
+																							// can
+																							// go
+																							// up
+																							// we
+																							// go
+																							// up
+					for (int a = i-R.vehicules[k-1].getLength(); a < R.vehicules[k - 1].getOrdinate() ; a++) {
+						if (R.grid[a][j] != 0 && !checkTop[R.grid[a][j]]) {
 							h1++;
-							Check[R.grid[a][j]] = 1;
+							checkTop[R.grid[a][j]] = true;
 						}
-					}
-					if (R.vehicules[k - 1].getLength() > R.size - 1 - i) { // Check
-																			// down
-																			// too
-						h = h + h1;
-					} else {
-						int h2 = 0;
-						for (int a = i + 1; a < i + R.vehicules[k - 1].getLength() + 1; a++) {
-							if (R.grid[a][j] != 0 && R.grid[a][j] != k && Check[R.grid[a][j]] == 0) {
-								h2++;
-								Check[R.grid[a][j]] = 1;
-							}
-						}
-						h = h + Math.min(h1, h2);
 					}
 				} else {
-					int h2 = 0;
-					for (int a = i + 1; a < R.size; a++) {
-						if (R.grid[a][j] != 0 && R.grid[a][j] != k && Check[R.grid[a][j]] == 0) {
-							h2++;
-							Check[R.grid[a][j]] = 1;
+					for (int a = i + 1; a < i + R.vehicules[k - 1].getLength() + 1; a++) { // else
+																							// we
+																							// go
+																							// down
+						if (R.grid[a][j] != 0 && !checkTop[R.grid[a][j]]) {
+							h1++;
+							checkTop[R.grid[a][j]] = true;
 						}
 					}
-					h = h + h2;
+				}
+				// If we can go down, we go down.
+				if (i+R.vehicules[k-1].getLength()<R.size) {
+					for (int a = i + 1; a < i + R.vehicules[k - 1].getLength() + 1; a++) {
+						if (R.grid[a][j] != 0 && !checkBottom[R.grid[a][j]]) {
+							h2++;
+							checkBottom[R.grid[a][j]] = true;
+						}
+					}
+				}
+				// If we can't we go up
+				else {
+					for (int a = i-R.vehicules[k-1].getLength(); a < R.vehicules[k - 1].getOrdinate(); a++) {
+						if (R.grid[a][j] != 0 && !checkBottom[R.grid[a][j]]) {
+							h2++;
+							checkBottom[R.grid[a][j]] = true;
+						}
+
+					}
 				}
 			}
 		}
+		return (h+Math.min(h1, h2));
 
-		return h;
 	}
 
 	public static int heuristics(RushHour R, boolean showPath) throws SuperpositionError {
