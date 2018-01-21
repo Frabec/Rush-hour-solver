@@ -11,18 +11,29 @@ public class Test {
 		System.out.println(RushHour.BFS(R));   // Return 7 for RushHour1, in 55ms, that is correct !
 		
 		long stopTime = System.currentTimeMillis();
-	    long elapsedTime = stopTime - startTime;
-	    System.out.println("Temps d'exécution : " + elapsedTime + " ms");
+		long elapsedTime = stopTime - startTime;
+		System.out.println("Temps d'exécution : " + elapsedTime + " ms");
 	    
-	    System.out.println("h(R) = " + RushHour.h(R));
+		System.out.println("h(R) = " + RushHour.h(R));
 	    
-	    startTime = System.currentTimeMillis();
+		startTime = System.currentTimeMillis();
 		
 		System.out.println(RushHour.Heuristics(R));   // Return 7 for RushHour1, in 55ms, that is correct !
 		
 		stopTime = System.currentTimeMillis();
-	    elapsedTime = stopTime - startTime;
-	    System.out.println("Temps d'exécution avec heuristique : " + elapsedTime + " ms");
+		elapsedTime = stopTime - startTime;
+		System.out.println("Temps d'exécution avec heuristique : " + elapsedTime + " ms");
+		
+		System.out.println("h1(R) = " + RushHour.h1(R));
+	    
+		startTime = System.currentTimeMillis();
+		
+		System.out.println(RushHour.Heuristics1(R));   
+		
+		stopTime = System.currentTimeMillis();
+		elapsedTime = stopTime - startTime;
+		System.out.println("Temps d'exécution avec seconde heuristique : " + elapsedTime + " ms");
+	    
 	}
 	
 	public static void printConfig(Vehicle [] vehicules){
