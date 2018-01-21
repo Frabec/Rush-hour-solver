@@ -3,7 +3,7 @@ import java.io.IOException;
 public class Test {
 
 	public static void main(String[] args) throws IOException, SuperpositionError {
-		RushHour R = new RushHour("RushHour2.txt");
+		RushHour R = new RushHour("RushHour7.txt");
 		R.show();
 		
 		//for (RushHour v : RushHour.AllPossibleMoves(R)){
@@ -11,7 +11,7 @@ public class Test {
 		//}
 		//System.out.println(RushHour.AllPossibleMoves(R).size());
 		//System.out.println("R est résolu : " + R.isSolution());
-		System.out.println(RushHour.BFS(R));
+		System.out.println("Number of movements " + RushHour.BFS(R));
 	}
 	
 	public static void printConfig(Vehicle [] vehicules){
